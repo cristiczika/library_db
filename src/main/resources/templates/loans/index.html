@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Loans</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body class="container py-4">
+<h1 class="mb-4">Loans</h1>
+
+<a href="/loans/new" class="btn btn-primary mb-3">New Loan</a>
+
+<table class="table table-striped table-bordered">
+    <thead class="table-dark">
+    <tr>
+        <th>ID</th>
+        <th>Member</th>
+        <th>Date</th>
+        <th>Items Count</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    <tr th:each="l : ${loans}">
+        <td th:text="${l.id}"></td>
+        <td th:text="${l.member.name}"></td>
+        <td th:text="${l.date}"></td>
+        <td th:text="${l.items.size()}"></td>
+
+        <td>
+            <a th:href="@{|/loans/${l.id}|}" class="btn btn-info btn-sm">Details</a>
+            <a th:href="@{|/loans/${l.id}/edit|}" class="btn btn-warning btn-sm">Edit</a>
+
+            <form th:action="@{|/loans/${l.id}/delete|}" method="post" class="d-inline">
+                <button class="btn btn-danger btn-sm"
+                        onclick="return confirm('Delete this loan?')">
+                    Delete
+                </button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+</body>
+</html>

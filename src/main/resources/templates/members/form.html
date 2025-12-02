@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Member Form</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body class="container py-4">
+
+<h1 th:text="${member.id == null} ? 'Add Member' : 'Edit Member'"></h1>
+
+<form th:action="${member.id == null} ? @{/members} : @{|/members/${member.id}/edit|}"
+      th:object="${member}" method="post" class="mt-4">
+
+    <div class="mb-3">
+        <label class="form-label">Name</label>
+        <input th:field="*{name}" class="form-control" type="text"/>
+
+        <div th:if="${#fields.hasErrors('name')}" class="text-danger mt-1"
+             th:errors="*{name}">Invalid name</div>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Email</label>
+        <input th:field="*{email}" class="form-control" type="email"/>
+
+        <div th:if="${#fields.hasErrors('email')}" class="text-danger mt-1"
+             th:errors="*{email}">Invalid email</div>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Library</label>
+        <select th:field="*{library.id}" class="form-select">
+            <option th:each="lib : ${libraries}"
+                    th:value="${lib.id}"
+                    th:text="${lib.name}">
+            </option>
+        </select>
+
+        <div th:if="${#fields.hasErrors('library')}" class="text-danger mt-1"
+             th:errors="*{library}">Invalid library</div>
+    </div>
+
+    <button class="btn btn-success" type="submit">Save</button>
+    <a href="/members" class="btn btn-secondary">Cancel</a>
+</form>
+
+</body>
+</html>

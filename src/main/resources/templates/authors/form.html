@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Author Form</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body class="container py-4">
+
+<h1 th:text="${author.id == null} ? 'Add Author' : 'Edit Author'"></h1>
+
+<form th:action="${author.id == null} ? @{/authors} : @{|/authors/${author.id}/edit|}"
+      th:object="${author}" method="post" class="mt-4">
+
+    <div class="mb-3">
+        <label class="form-label">Name</label>
+        <input th:field="*{name}" class="form-control" type="text"/>
+
+        <div th:if="${#fields.hasErrors('name')}" class="text-danger mt-1"
+             th:errors="*{name}">Invalid name</div>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Date of Birth</label>
+        <input th:field="*{dateOfBirth}" class="form-control" type="date"/>
+
+        <div th:if="${#fields.hasErrors('dateOfBirth')}" class="text-danger mt-1"
+             th:errors="*{dateOfBirth}">Invalid date</div>
+    </div>
+
+    <button class="btn btn-success" type="submit">Save</button>
+    <a href="/authors" class="btn btn-secondary">Cancel</a>
+</form>
+
+</body>
+</html>
