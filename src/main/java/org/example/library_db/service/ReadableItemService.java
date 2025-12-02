@@ -16,10 +16,12 @@ public class ReadableItemService {
     }
 
     public ReadableItem addReadableItem(ReadableItem item) {
+        validateItem(item, null);
         return repository.save(item);
     }
 
     public void updateReadableItem(Long id, ReadableItem update) {
+        validateItem(update, id);
         update.setId(id);
         repository.save(update);
     }
@@ -36,4 +38,23 @@ public class ReadableItemService {
         return repository.findAll();
     }
 
+    private void validateItem(ReadableItem item, Long currentId) {
+        if (item.getPublication() == null || item.getPublication().getId() == null) {
+            throw new IllegalArgumentException("Readable item must be associated with a publication.");
+        }
+        if (item.getLibrary() == null || item.getLibrary().getId() == null) {
+            throw new IllegalArgumentException("Readable item must belong to a library.");
+        }
+        if (item.getBarcode() == null || item.getBarcode().trim().isEmpty()) {
+            throw new IllegalArgumentException("Barcode cannot be empty.");
+        }
+
+        boolean exists = (currentId == null)
+                ? repository.existsByBarcode(item.getBarcode())
+                : repository.existsByBarcodeAndIdNot(item.getBarcode(), currentId);
+
+        if (exists) {
+            throw new IllegalArgumentException("A readable item with this barcode already exists.");
+        }
+    }
 }

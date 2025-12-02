@@ -16,10 +16,12 @@ public class LibraryService {
     }
 
     public Library addLibrary(Library library) {
+        validateLibrary(library, null);
         return repository.save(library);
     }
 
     public void updateLibrary(Long id, Library update) {
+        validateLibrary(update, id);
         update.setId(id);
         repository.save(update);
     }
@@ -36,4 +38,20 @@ public class LibraryService {
         return repository.findAll();
     }
 
+    private void validateLibrary(Library library, Long currentId) {
+        if (library.getName() == null || library.getName().trim().isEmpty()) {
+            throw new IllegalArgumentException("Library name cannot be empty.");
+        }
+        if (library.getAddress() == null || library.getAddress().trim().isEmpty()) {
+            throw new IllegalArgumentException("Library address cannot be empty.");
+        }
+
+        boolean exists = (currentId == null)
+                ? repository.existsByNameIgnoreCase(library.getName())
+                : repository.existsByNameIgnoreCaseAndIdNot(library.getName(), currentId);
+
+        if (exists) {
+            throw new IllegalArgumentException("A library with this name already exists.");
+        }
+    }
 }

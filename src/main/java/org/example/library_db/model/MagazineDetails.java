@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import jakarta.validation.constraints.*;
+
 @Entity
 @Table(name = "magazine_details")
 @Getter
@@ -14,6 +16,8 @@ import lombok.Setter;
 @NoArgsConstructor
 public class MagazineDetails extends Publication {
 
+    @NotBlank(message = "Publisher cannot be empty")
+    @Size(min = 3, max = 200)
     @Column(nullable = false, length = 200)
     private String publisher;
 

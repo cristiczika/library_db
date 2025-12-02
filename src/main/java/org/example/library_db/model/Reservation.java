@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import jakarta.validation.constraints.*;
+
 import java.time.LocalDate;
 
 @Entity
@@ -18,10 +20,12 @@ public class Reservation {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotNull(message = "Member is required")
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
 
+    @NotNull(message = "Readable item is required")
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "item_id", nullable = false)
     private ReadableItem readableItem;
@@ -30,9 +34,12 @@ public class Reservation {
     @JoinColumn(name = "loan_id")
     private Loan loan;
 
+    @NotNull(message = "Date is required")
+    @PastOrPresent(message = "Date cannot be in the future")
     @Column(columnDefinition = "DATE", nullable = false)
     private LocalDate date;
 
+    @NotNull(message = "Status is required")
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private ReservationStatus status;

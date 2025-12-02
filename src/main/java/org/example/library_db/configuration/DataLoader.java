@@ -27,8 +27,9 @@ public class DataLoader {
                     new Library("Librarie Iasi", "Strada Stefan cel Mare 33")
             };
 
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i < libs.length; i++)
                 libs[i] = libraryService.addLibrary(libs[i]);
+
 
             Author[] authors = {
                     new Author(null, "Mihai Eminescu", LocalDate.of(1850, 6, 15), null),
@@ -43,8 +44,9 @@ public class DataLoader {
                     new Author(null, "Gabriel García Márquez", LocalDate.of(1927, 3, 6), null)
             };
 
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i < authors.length; i++)
                 authors[i] = authorService.addAuthor(authors[i]);
+
 
             BookDetails[] books = {
                     new BookDetails("Poezii"),
@@ -59,8 +61,9 @@ public class DataLoader {
                     new BookDetails("The Handmaid's Tale")
             };
 
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i < books.length; i++)
                 books[i] = bookDetailsService.addBookDetails(books[i]);
+
 
             MagazineDetails[] mags = {
                     new MagazineDetails("National Geographic", "NatGeo"),
@@ -75,28 +78,29 @@ public class DataLoader {
                     new MagazineDetails("Harvard Business Review", "Harvard Business Publishing")
             };
 
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i < mags.length; i++)
                 mags[i] = magazineDetailsService.addMagazineDetails(mags[i]);
 
-            for (int i = 0; i < 10; i++) {
-                bookAuthorService.add(new BookAuthor(null, books[i], authors[i]));
-            }
-
-            ReadableItem[] items = {
-                    new ReadableItem(books[0], libs[0], "BC101", ReadableItemStatus.AVAILABLE),
-                    new ReadableItem(books[1], libs[0], "BC102", ReadableItemStatus.AVAILABLE),
-                    new ReadableItem(books[2], libs[0], "BC103", ReadableItemStatus.BORROWED),
-                    new ReadableItem(books[3], libs[0], "BC104", ReadableItemStatus.AVAILABLE),
-                    new ReadableItem(mags[0], libs[0], "BC105", ReadableItemStatus.RESERVED),
-                    new ReadableItem(mags[1], libs[0], "BC106", ReadableItemStatus.AVAILABLE),
-                    new ReadableItem(mags[2], libs[0], "BC107", ReadableItemStatus.BORROWED),
-                    new ReadableItem(mags[3], libs[0], "BC108", ReadableItemStatus.AVAILABLE),
-                    new ReadableItem(books[4], libs[0], "BC109", ReadableItemStatus.AVAILABLE),
-                    new ReadableItem(books[5], libs[0], "BC110", ReadableItemStatus.RESERVED)
-            };
 
             for (int i = 0; i < 10; i++)
+                bookAuthorService.add(new BookAuthor(null, books[i], authors[i]));
+
+
+            ReadableItem[] items = new ReadableItem[10];
+
+            for (int i = 0; i < 10; i++) {
+                Publication pub = (i < 6) ? books[i] : mags[i - 6];
+
+                items[i] = new ReadableItem(
+                        pub,
+                        libs[0],
+                        "BC10" + i,
+                        ReadableItemStatus.AVAILABLE
+                );
+
                 items[i] = readableItemService.addReadableItem(items[i]);
+            }
+
 
             Member[] members = {
                     new Member("Ana Popescu", "ana.popescu@gmail.com", libs[0]),
@@ -111,39 +115,51 @@ public class DataLoader {
                     new Member("Alina Dumitrescu", "alinadumitrescu@yahoo.com", libs[5])
             };
 
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i < members.length; i++)
                 members[i] = memberService.addMember(members[i]);
+
 
             Loan[] loans = new Loan[10];
 
             for (int i = 0; i < 10; i++) {
 
-                LocalDate loanDate = LocalDate.of(2025, 10, 20).plusDays(i);
+                LocalDate date = LocalDate.of(2025, 10, 20).plusDays(i);
 
-                Loan loan = new Loan(members[i], loanDate);
+                Loan loan = new Loan(members[i], date);
 
                 loan.addItem(items[i]);
-                loan.addItem(items[(i + 1) % 10]);
 
                 loans[i] = loanService.addLoan(loan);
             }
 
+
             for (int i = 0; i < 10; i++) {
-                LocalDate reservationDate = LocalDate.of(2025, 10, 25).plusDays(i);
+
+                LocalDate reservationDate = LocalDate.now().minusDays(i + 1);
 
                 ReservationStatus status =
                         (i % 3 == 0) ? ReservationStatus.ACTIVE :
                                 (i % 3 == 1) ? ReservationStatus.COMPLETED :
                                         ReservationStatus.CANCELLED;
 
-                Reservation r = new Reservation(members[i], items[i], reservationDate, status);
+                // IMPORTANT: reserve a DIFFERENT item, not the one they borrowed
+                ReadableItem reservedItem = items[(i + 2) % 10];
 
+                Reservation r = new Reservation(
+                        members[i],
+                        reservedItem,
+                        reservationDate,
+                        status
+                );
+
+                // attach to loan for demonstration, but not same item
                 r.setLoan(loans[i]);
                 loans[i].addReservation(r);
 
                 reservationService.addReservation(r);
                 loanService.addLoan(loans[i]);
             }
+
         };
     }
 }

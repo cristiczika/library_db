@@ -18,6 +18,7 @@ public class BookAuthorService {
     }
 
     public BookAuthor add(BookAuthor ba) {
+        validateLink(ba.getBook(), ba.getAuthor(), null);
         return repo.save(ba);
     }
 
@@ -30,9 +31,10 @@ public class BookAuthorService {
     }
 
     public BookAuthor update(Long id, BookDetails book, Author author) {
-
         BookAuthor existing = repo.findById(id).orElse(null);
         if (existing == null) return null;
+
+        validateLink(book, author, id);
 
         existing.setBook(book);
         existing.setAuthor(author);
@@ -42,5 +44,22 @@ public class BookAuthorService {
 
     public void remove(Long id) {
         repo.findById(id).ifPresent(repo::delete);
+    }
+
+    private void validateLink(BookDetails book, Author author, Long currentId) {
+        if (book == null || book.getId() == null) {
+            throw new IllegalArgumentException("Book must be selected.");
+        }
+        if (author == null || author.getId() == null) {
+            throw new IllegalArgumentException("Author must be selected.");
+        }
+
+        boolean exists = (currentId == null)
+                ? repo.existsByBookIdAndAuthorId(book.getId(), author.getId())
+                : repo.existsByBookIdAndAuthorIdAndIdNot(book.getId(), author.getId(), currentId);
+
+        if (exists) {
+            throw new IllegalArgumentException("This book is already linked to this author.");
+        }
     }
 }

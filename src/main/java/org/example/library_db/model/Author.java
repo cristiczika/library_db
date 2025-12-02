@@ -10,6 +10,8 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import jakarta.validation.constraints.*;
+
 @Entity
 @Table(name = "authors")
 @Getter
@@ -22,9 +24,13 @@ public class Author {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank(message = "Name cannot be empty")
+    @Size(min = 3, max = 200, message = "Name must be between 3 and 200 characters")
     @Column(nullable = false, length = 200)
     private String name;
 
+    @Past(message = "Date of birth must be in the past")
+    @NotNull(message = "Date of birth is required")
     @Column(columnDefinition = "DATE")
     private LocalDate dateOfBirth;
 

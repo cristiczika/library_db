@@ -1,9 +1,12 @@
 package org.example.library_db.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.Valid;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import jakarta.validation.constraints.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,9 +23,12 @@ public abstract class Publication {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank(message = "Title cannot be empty")
+    @Size(min = 2, max = 200)
     @Column(nullable = false)
     private String title;
 
+    @Valid
     @OneToMany(mappedBy = "publication", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ReadableItem> copies = new ArrayList<>();
 

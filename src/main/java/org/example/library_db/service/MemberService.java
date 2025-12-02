@@ -16,10 +16,12 @@ public class MemberService {
     }
 
     public Member addMember(Member member) {
+        validateMember(member, null);
         return repository.save(member);
     }
 
     public void updateMember(Long id, Member update) {
+        validateMember(update, id);
         update.setId(id);
         repository.save(update);
     }
@@ -36,4 +38,23 @@ public class MemberService {
         return repository.findAll();
     }
 
+    private void validateMember(Member member, Long currentId) {
+        if (member.getName() == null || member.getName().trim().isEmpty()) {
+            throw new IllegalArgumentException("Member name cannot be empty.");
+        }
+        if (member.getEmail() == null || member.getEmail().trim().isEmpty()) {
+            throw new IllegalArgumentException("Member email cannot be empty.");
+        }
+        if (member.getLibrary() == null || member.getLibrary().getId() == null) {
+            throw new IllegalArgumentException("Member must belong to a library.");
+        }
+
+        boolean exists = (currentId == null)
+                ? repository.existsByEmailIgnoreCase(member.getEmail())
+                : repository.existsByEmailIgnoreCaseAndIdNot(member.getEmail(), currentId);
+
+        if (exists) {
+            throw new IllegalArgumentException("A member with this email already exists.");
+        }
+    }
 }
