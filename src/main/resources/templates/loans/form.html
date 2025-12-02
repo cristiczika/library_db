@@ -9,32 +9,28 @@
 
 <h1 th:text="${loan.id == null} ? 'Add Loan' : 'Edit Loan'"></h1>
 
-<form th:action="${loan.id == null} ? @{/loans} : @{|/loans/${loan.id}/edit|}"
-      method="post" class="mt-4">
+<div class="alert alert-danger" th:if="${globalError}">
+    [[${globalError}]]
+</div>
+
+<form th:action="${loan.id == null} ? @{/loans} : @{|/loans/${loan.id}/edit|}" method="post" class="mt-4">
 
     <div class="mb-3">
-        <label class="form-label">Member</label>
+        <label>Member</label>
         <select name="memberId" class="form-select">
-            <option th:each="m : ${members}"
-                    th:value="${m.id}"
-                    th:text="${m.name}"
-                    th:selected="${loan.member != null && loan.member.id == m.id}">
-            </option>
+            <option th:each="m : ${members}" th:value="${m.id}"
+                    th:selected="${loan.member != null && loan.member.id == m.id}"
+                    th:text="${m.name}"></option>
         </select>
     </div>
 
     <div class="mb-3">
-        <label class="form-label">Items</label>
-        <select name="itemIds"
-                class="form-select"
-                multiple>
-            <option th:each="i : ${items}"
-                    th:value="${i.id}"
-                    th:text="${i.barcode}"
-                    th:selected="${loan.items.contains(i)}">
-            </option>
+        <label>Items</label>
+        <select name="itemIds" class="form-select" multiple>
+            <option th:each="i : ${items}" th:value="${i.id}"
+                    th:selected="${loan.items.contains(i)}"
+                    th:text="${i.barcode}"></option>
         </select>
-        <small>Select multiple using CTRL or CMD</small>
     </div>
 
     <button class="btn btn-success">Save</button>

@@ -9,23 +9,24 @@
 
 <h1 th:text="${author.id == null} ? 'Add Author' : 'Edit Author'"></h1>
 
+<!-- GLOBAL ERROR (business validation) -->
+<div class="alert alert-danger" th:if="${globalError}">
+    [[${globalError}]]
+</div>
+
 <form th:action="${author.id == null} ? @{/authors} : @{|/authors/${author.id}/edit|}"
       th:object="${author}" method="post" class="mt-4">
 
     <div class="mb-3">
         <label class="form-label">Name</label>
         <input th:field="*{name}" class="form-control" type="text"/>
-
-        <div th:if="${#fields.hasErrors('name')}" class="text-danger mt-1"
-             th:errors="*{name}">Invalid name</div>
+        <div class="text-danger mt-1" th:errors="*{name}"></div>
     </div>
 
     <div class="mb-3">
         <label class="form-label">Date of Birth</label>
         <input th:field="*{dateOfBirth}" class="form-control" type="date"/>
-
-        <div th:if="${#fields.hasErrors('dateOfBirth')}" class="text-danger mt-1"
-             th:errors="*{dateOfBirth}">Invalid date</div>
+        <div class="text-danger mt-1" th:errors="*{dateOfBirth}"></div>
     </div>
 
     <button class="btn btn-success" type="submit">Save</button>

@@ -9,27 +9,28 @@
 
 <h1 th:text="${library.id == null} ? 'Add Library' : 'Edit Library'"></h1>
 
-<form th:action="${library.id == null} ? @{/libraries} : @{|/libraries/${library.id}/edit|}"
-      th:object="${library}" method="post" class="mt-4">
+<div class="alert alert-danger" th:if="${globalError}">
+    [[${globalError}]]
+</div>
+
+<form th:object="${library}" th:action="${library.id == null} ? @{/libraries} : @{|/libraries/${library.id}/edit|}"
+      method="post" class="mt-4">
 
     <div class="mb-3">
-        <label class="form-label">Name</label>
-        <input th:field="*{name}" class="form-control" type="text"/>
-
-        <div th:if="${#fields.hasErrors('name')}" class="text-danger mt-1"
-             th:errors="*{name}">Invalid name</div>
+        <label>Name</label>
+        <input th:field="*{name}" class="form-control"/>
+        <div class="text-danger" th:errors="*{name}"></div>
     </div>
 
     <div class="mb-3">
-        <label class="form-label">Address</label>
-        <input th:field="*{address}" class="form-control" type="text"/>
-
-        <div th:if="${#fields.hasErrors('address')}" class="text-danger mt-1"
-             th:errors="*{address}">Invalid address</div>
+        <label>Address</label>
+        <input th:field="*{address}" class="form-control"/>
+        <div class="text-danger" th:errors="*{address}"></div>
     </div>
 
-    <button class="btn btn-success" type="submit">Save</button>
+    <button class="btn btn-success">Save</button>
     <a href="/libraries" class="btn btn-secondary">Cancel</a>
+
 </form>
 
 </body>

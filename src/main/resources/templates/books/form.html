@@ -9,18 +9,20 @@
 
 <h1 th:text="${book.id == null} ? 'Add Book' : 'Edit Book'"></h1>
 
+<div class="alert alert-danger" th:if="${globalError}">
+    [[${globalError}]]
+</div>
+
 <form th:action="${book.id == null} ? @{/books} : @{|/books/${book.id}/edit|}"
       th:object="${book}" method="post" class="mt-4">
 
     <div class="mb-3">
         <label class="form-label">Title</label>
-        <input th:field="*{title}" class="form-control" type="text"/>
-
-        <div th:if="${#fields.hasErrors('title')}" class="text-danger mt-1"
-             th:errors="*{title}">Invalid title</div>
+        <input th:field="*{title}" class="form-control"/>
+        <div class="text-danger" th:errors="*{title}"></div>
     </div>
 
-    <button class="btn btn-success" type="submit">Save</button>
+    <button class="btn btn-success">Save</button>
     <a href="/books" class="btn btn-secondary">Cancel</a>
 </form>
 

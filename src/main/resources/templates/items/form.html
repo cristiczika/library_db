@@ -9,44 +9,40 @@
 
 <h1 th:text="${item.id == null} ? 'Add Readable Item' : 'Edit Readable Item'"></h1>
 
+<div class="alert alert-danger" th:if="${globalError}">
+    [[${globalError}]]
+</div>
+
 <form th:action="${item.id == null} ? @{/items} : @{|/items/${item.id}/edit|}"
       th:object="${item}" method="post" class="mt-4">
 
     <div class="mb-3">
-        <label class="form-label">Barcode</label>
-        <input th:field="*{barcode}" class="form-control" type="text"/>
-        <div th:if="${#fields.hasErrors('barcode')}" class="text-danger"
-             th:errors="*{barcode}">Invalid barcode</div>
+        <label>Barcode</label>
+        <input th:field="*{barcode}" class="form-control"/>
+        <div class="text-danger" th:errors="*{barcode}"></div>
     </div>
 
     <div class="mb-3">
-        <label class="form-label">Status</label>
-        <select class="form-select" th:field="*{status}">
-            <option th:each="s : ${statuses}"
-                    th:value="${s}"
-                    th:text="${s}">
-            </option>
+        <label>Status</label>
+        <select th:field="*{status}" class="form-select">
+            <option th:each="s : ${statuses}" th:value="${s}" th:text="${s}"></option>
         </select>
     </div>
 
     <div class="mb-3">
-        <label class="form-label">Library</label>
-        <select class="form-select" th:field="*{library}">
-            <option th:each="l : ${libraries}"
-                    th:value="${l.id}"
-                    th:text="${l.name}">
-            </option>
+        <label>Library</label>
+        <select th:field="*{library.id}" class="form-select">
+            <option th:each="l : ${libraries}" th:value="${l.id}" th:text="${l.name}"></option>
         </select>
+        <div class="text-danger" th:errors="*{library}"></div>
     </div>
 
     <div class="mb-3">
-        <label class="form-label">Publication</label>
-        <select class="form-select" th:field="*{publication}">
-            <option th:each="p : ${publications}"
-                    th:value="${p.id}"
-                    th:text="${p.title}">
-            </option>
+        <label>Publication</label>
+        <select th:field="*{publication.id}" class="form-select">
+            <option th:each="p : ${publications}" th:value="${p.id}" th:text="${p.title}"></option>
         </select>
+        <div class="text-danger" th:errors="*{publication}"></div>
     </div>
 
     <button class="btn btn-success">Save</button>

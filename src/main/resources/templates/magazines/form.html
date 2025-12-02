@@ -9,21 +9,23 @@
 
 <h1 th:text="${magazine.id == null} ? 'Add Magazine' : 'Edit Magazine'"></h1>
 
-<form th:action="${magazine.id == null} ? @{/magazines} : @{|/magazines/${magazine.id}/edit|}"
-      th:object="${magazine}" method="post" class="mt-4">
+<div class="alert alert-danger" th:if="${globalError}">
+    [[${globalError}]]
+</div>
+
+<form th:object="${magazine}" th:action="${magazine.id == null} ? @{/magazines} : @{|/magazines/${magazine.id}/edit|}"
+      method="post" class="mt-4">
 
     <div class="mb-3">
-        <label class="form-label">Title</label>
-        <input th:field="*{title}" class="form-control" type="text"/>
-        <div th:if="${#fields.hasErrors('title')}" class="text-danger mt-1"
-             th:errors="*{title}">Invalid title</div>
+        <label>Title</label>
+        <input th:field="*{title}" class="form-control"/>
+        <div class="text-danger" th:errors="*{title}"></div>
     </div>
 
     <div class="mb-3">
-        <label class="form-label">Publisher</label>
-        <input th:field="*{publisher}" class="form-control" type="text"/>
-        <div th:if="${#fields.hasErrors('publisher')}" class="text-danger mt-1"
-             th:errors="*{publisher}">Invalid publisher</div>
+        <label>Publisher</label>
+        <input th:field="*{publisher}" class="form-control"/>
+        <div class="text-danger" th:errors="*{publisher}"></div>
     </div>
 
     <button class="btn btn-success">Save</button>

@@ -9,45 +9,54 @@
 
 <h1 th:text="${reservation.id == null} ? 'Add Reservation' : 'Edit Reservation'"></h1>
 
-<form th:action="${reservation.id == null} ? @{/reservations} : @{|/reservations/${reservation.id}/edit|}"
-      th:object="${reservation}" method="post" class="mt-4">
+<div class="alert alert-danger" th:if="${globalError}">
+    [[${globalError}]]
+</div>
+
+<form th:object="${reservation}" th:action="${reservation.id == null} ? @{/reservations} : @{|/reservations/${reservation.id}/edit|}"
+      method="post" class="mt-4">
 
     <div class="mb-3">
-        <label class="form-label">Member</label>
-        <select th:field="*{member}" class="form-select">
+        <label>Member</label>
+        <select th:field="*{member.id}" class="form-select">
             <option th:each="m : ${members}" th:value="${m.id}" th:text="${m.name}"></option>
         </select>
+        <div class="text-danger" th:errors="*{member}"></div>
     </div>
 
     <div class="mb-3">
-        <label class="form-label">Readable Item</label>
-        <select th:field="*{readableItem}" class="form-select">
+        <label>Readable Item</label>
+        <select th:field="*{readableItem.id}" class="form-select">
             <option th:each="i : ${items}" th:value="${i.id}" th:text="${i.barcode}"></option>
         </select>
+        <div class="text-danger" th:errors="*{readableItem}"></div>
     </div>
 
     <div class="mb-3">
-        <label class="form-label">Loan (optional)</label>
-        <select th:field="*{loan}" class="form-select">
+        <label>Loan</label>
+        <select th:field="*{loan.id}" class="form-select">
             <option value="">No loan</option>
             <option th:each="l : ${loans}" th:value="${l.id}" th:text="${l.id}"></option>
         </select>
     </div>
 
     <div class="mb-3">
-        <label class="form-label">Date</label>
+        <label>Date</label>
         <input th:field="*{date}" class="form-control" type="date">
+        <div class="text-danger" th:errors="*{date}"></div>
     </div>
 
     <div class="mb-3">
-        <label class="form-label">Status</label>
+        <label>Status</label>
         <select th:field="*{status}" class="form-select">
             <option th:each="s : ${statuses}" th:value="${s}" th:text="${s}"></option>
         </select>
+        <div class="text-danger" th:errors="*{status}"></div>
     </div>
 
-    <button class="btn btn-success" type="submit">Save</button>
+    <button class="btn btn-success">Save</button>
     <a href="/reservations" class="btn btn-secondary">Cancel</a>
+
 </form>
 
 </body>

@@ -9,39 +9,34 @@
 
 <h1 th:text="${bookauthor.id == null} ? 'Add Link' : 'Edit Link'"></h1>
 
+<div class="alert alert-danger" th:if="${globalError}">
+    [[${globalError}]]
+</div>
+
 <form th:action="${bookauthor.id == null} ? @{/bookauthors} : @{|/bookauthors/${bookauthor.id}/edit|}"
-      method="post"
-      class="mt-4">
+      method="post" class="mt-4">
 
     <div class="mb-3">
         <label class="form-label">Book</label>
-
         <select name="bookId" class="form-select">
             <option value="">-- choose book --</option>
-
-            <option th:each="b : ${books}"
-                    th:value="${b.id}"
-                    th:selected="${bookauthor.book != null} ? ${b.id == bookauthor.book.id} : false"
-                    th:text="${b.title}">
-            </option>
+            <option th:each="b : ${books}" th:value="${b.id}"
+                    th:selected="${bookauthor.book != null and bookauthor.book.id == b.id}"
+                    th:text="${b.title}"></option>
         </select>
     </div>
 
     <div class="mb-3">
         <label class="form-label">Author</label>
-
         <select name="authorId" class="form-select">
             <option value="">-- choose author --</option>
-
-            <option th:each="a : ${authors}"
-                    th:value="${a.id}"
-                    th:selected="${bookauthor.author != null} ? ${a.id == bookauthor.author.id} : false"
-                    th:text="${a.name}">
-            </option>
+            <option th:each="a : ${authors}" th:value="${a.id}"
+                    th:selected="${bookauthor.author != null and bookauthor.author.id == a.id}"
+                    th:text="${a.name}"></option>
         </select>
     </div>
 
-    <button class="btn btn-success" type="submit">Save</button>
+    <button class="btn btn-success">Save</button>
     <a href="/bookauthors" class="btn btn-secondary">Cancel</a>
 </form>
 
