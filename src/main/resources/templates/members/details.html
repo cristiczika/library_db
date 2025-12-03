@@ -17,6 +17,20 @@
         <p><strong>Email:</strong> <span th:text="${member.email}"></span></p>
         <p><strong>Library:</strong> <span th:text="${member.library.name}"></span></p>
     </div>
+
+    <h3>Loans</h3>
+    <ul>
+        <li th:each="l : ${loans}">
+            Loan #[[${l.id}]] – date: [[${l.date}]]
+        </li>
+    </ul>
+
+    <h3>Reservations</h3>
+    <ul>
+        <li th:each="r : ${reservations}">
+            Reservation #[[${r.id}]] – item: [[${r.readableItem.barcode}]]
+        </li>
+    </ul>
 </div>
 
 <div class="mt-3">

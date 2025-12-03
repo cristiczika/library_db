@@ -4,10 +4,7 @@ import jakarta.validation.Valid;
 import org.example.library_db.model.Publication;
 import org.example.library_db.model.ReadableItem;
 import org.example.library_db.model.ReadableItemStatus;
-import org.example.library_db.service.BookDetailsService;
-import org.example.library_db.service.LibraryService;
-import org.example.library_db.service.MagazineDetailsService;
-import org.example.library_db.service.ReadableItemService;
+import org.example.library_db.service.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -45,6 +42,9 @@ public class ReadableItemController {
             return "redirect:/items";
 
         model.addAttribute("item", item);
+        model.addAttribute("loans", items.getLoansByItemId(id));
+        model.addAttribute("reservations", items.getReservationsByItemId(id));
+
         return "items/details";
     }
 

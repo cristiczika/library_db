@@ -15,6 +15,21 @@
         <p><strong>ID:</strong> <span th:text="${library.id}"></span></p>
         <p><strong>Address:</strong> <span th:text="${library.address}"></span></p>
     </div>
+
+    <h3>Members</h3>
+    <ul>
+        <li th:each="m : ${members}">
+            <a th:href="@{|/members/${m.id}|}" th:text="${m.name}"></a>
+        </li>
+    </ul>
+
+    <h3>Readable Items</h3>
+    <ul>
+        <li th:each="i : ${items}">
+            <a th:href="@{|/items/${i.id}|}"
+               th:text="${i.barcode + ' (' + i.publication.title + ')'}"></a>
+        </li>
+    </ul>
 </div>
 
 <div class="mt-3">

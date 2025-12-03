@@ -5,10 +5,13 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Repository
 public interface LoanRepository extends JpaRepository<Loan, Long> {
     long countTotalItemsByMemberId(Long memberId);
     Loan findTopByMemberIdOrderByDateDesc(Long memberId);
     boolean existsByMemberIdAndItemsId(Long memberId, Long itemId);
+    List<Loan> findByMemberId(Long memberId);
+    List<Loan> findByItemsId(Long itemId);
 }

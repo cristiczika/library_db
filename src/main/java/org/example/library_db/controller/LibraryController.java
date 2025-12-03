@@ -30,6 +30,9 @@ public class LibraryController {
         if (library == null) return "redirect:/libraries";
 
         model.addAttribute("library", library);
+        Library lib = service.getLibraryById(id);
+        model.addAttribute("members", service.getMembersByLibraryId(id));
+        model.addAttribute("items", service.getItemsByLibraryId(id));
         return "libraries/details";
     }
 

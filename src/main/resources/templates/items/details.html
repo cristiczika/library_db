@@ -19,6 +19,20 @@
         <p><strong>Publication:</strong> <span th:text="${item.publication.title}"></span></p>
 
     </div>
+
+    <h3>Loans</h3>
+    <ul>
+        <li th:each="l : ${loans}">
+            Loan #[[${l.id}]] – date: [[${l.date}]]
+        </li>
+    </ul>
+
+    <h3>Reservations</h3>
+    <ul>
+        <li th:each="r : ${reservations}">
+            Reservation #[[${r.id}]] – date: [[${r.date}]] – [[${r.status}]]
+        </li>
+    </ul>
 </div>
 
 <div class="mt-3">

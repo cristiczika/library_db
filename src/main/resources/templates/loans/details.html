@@ -19,6 +19,25 @@
         <ul>
             <li th:each="i : ${loan.items}" th:text="${i.barcode}"></li>
         </ul>
+
+        <h3>Member</h3>
+        <p>
+            <a th:href="@{|/members/${member.id}|}" th:text="${member.name}"></a>
+        </p>
+
+        <h3>Items</h3>
+        <ul>
+            <li th:each="i : ${items}">
+                <a th:href="@{|/items/${i.id}|}" th:text="${i.barcode}"></a>
+            </li>
+        </ul>
+
+        <h3>Reservations</h3>
+        <ul>
+            <li th:each="r : ${reservations}">
+                <a th:href="@{|/reservations/${r.id}|}" th:text="${r.status}"></a>
+            </li>
+        </ul>
     </div>
 </div>
 

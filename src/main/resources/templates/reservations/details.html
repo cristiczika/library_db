@@ -30,6 +30,22 @@
 
         <p><strong>Status:</strong> <span th:text="${reservation.status}"></span></p>
 
+        <h3>Member</h3>
+        <p>
+            <a th:href="@{|/members/${member.id}|}" th:text="${member.name}"></a>
+        </p>
+
+        <h3>Item</h3>
+        <p>
+            <a th:href="@{|/items/${item.id}|}" th:text="${item.barcode}"></a>
+        </p>
+
+        <h3>Loan</h3>
+        <p th:if="${loan != null}">
+            <a th:href="@{|/loans/${loan.id}|}" th:text="${loan.id}"></a>
+        </p>
+        <p th:if="${loan == null}">No loan assigned</p>
+
     </div>
 </div>
 

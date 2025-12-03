@@ -3,6 +3,7 @@ package org.example.library_db.controller;
 import jakarta.validation.Valid;
 import org.example.library_db.model.Author;
 import org.example.library_db.service.AuthorService;
+import org.example.library_db.service.BookAuthorService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -13,9 +14,11 @@ import org.springframework.web.bind.annotation.*;
 public class AuthorController {
 
     private final AuthorService authorService;
+    private final BookAuthorService bookAuthorService;
 
-    public AuthorController(AuthorService authorService) {
+    public AuthorController(AuthorService authorService, BookAuthorService bookAuthorService) {
         this.authorService = authorService;
+        this.bookAuthorService = bookAuthorService;
     }
 
     @GetMapping
@@ -32,6 +35,7 @@ public class AuthorController {
         }
 
         model.addAttribute("author", author);
+        model.addAttribute("books", bookAuthorService.getBooksByAuthor(id));
         return "authors/details";
     }
 

@@ -3,7 +3,9 @@ package org.example.library_db.controller;
 import jakarta.validation.Valid;
 import org.example.library_db.model.Member;
 import org.example.library_db.service.LibraryService;
+import org.example.library_db.service.LoanService;
 import org.example.library_db.service.MemberService;
+import org.example.library_db.service.ReservationService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -33,6 +35,8 @@ public class MemberController {
         if (m == null) return "redirect:/members";
 
         model.addAttribute("member", m);
+        model.addAttribute("loans", members.getLoansByMemberId(id));
+        model.addAttribute("reservations", members.getReservationsByMemberId(id));
         return "members/details";
     }
 

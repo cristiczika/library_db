@@ -1,7 +1,11 @@
 package org.example.library_db.service;
 
+import org.example.library_db.model.Loan;
 import org.example.library_db.model.ReadableItem;
+import org.example.library_db.model.Reservation;
+import org.example.library_db.repository.LoanRepository;
 import org.example.library_db.repository.ReadableItemRepository;
+import org.example.library_db.repository.ReservationRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -10,9 +14,13 @@ import java.util.List;
 public class ReadableItemService {
 
     private final ReadableItemRepository repository;
+    private final LoanRepository loans;
+    private final ReservationRepository reservations;
 
-    public ReadableItemService(ReadableItemRepository repository) {
+    public ReadableItemService(ReadableItemRepository repository, LoanRepository loans, ReservationRepository reservations) {
         this.repository = repository;
+        this.loans = loans;
+        this.reservations = reservations;
     }
 
     public ReadableItem addReadableItem(ReadableItem item) {
@@ -36,6 +44,14 @@ public class ReadableItemService {
 
     public List<ReadableItem> getAllReadableItems() {
         return repository.findAll();
+    }
+
+    public List<Loan> getLoansByItemId(Long itemId) {
+        return loans.findByItemsId(itemId);
+    }
+
+    public List<Reservation> getReservationsByItemId(Long itemId) {
+        return reservations.findByReadableItemId(itemId);
     }
 
     private void validateItem(ReadableItem item, Long currentId) {

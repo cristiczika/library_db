@@ -1,7 +1,11 @@
 package org.example.library_db.service;
 
+import org.example.library_db.model.Loan;
 import org.example.library_db.model.Member;
+import org.example.library_db.model.Reservation;
+import org.example.library_db.repository.LoanRepository;
 import org.example.library_db.repository.MemberRepository;
+import org.example.library_db.repository.ReservationRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -10,9 +14,13 @@ import java.util.List;
 public class MemberService {
 
     private final MemberRepository repository;
+    private final LoanRepository loans;
+    private final ReservationRepository reservations;
 
-    public MemberService(MemberRepository repository) {
+    public MemberService(MemberRepository repository, LoanRepository loans, ReservationRepository reservations) {
         this.repository = repository;
+        this.loans = loans;
+        this.reservations = reservations;
     }
 
     public Member addMember(Member member) {
@@ -36,6 +44,14 @@ public class MemberService {
 
     public List<Member> getAllMembers() {
         return repository.findAll();
+    }
+
+    public List<Loan> getLoansByMemberId(Long id) {
+        return loans.findByMemberId(id);
+    }
+
+    public List<Reservation> getReservationsByMemberId(Long id) {
+        return reservations.findByMemberId(id);
     }
 
     private void validateMember(Member member, Long currentId) {

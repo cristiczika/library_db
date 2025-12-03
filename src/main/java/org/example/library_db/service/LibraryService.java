@@ -1,7 +1,11 @@
 package org.example.library_db.service;
 
 import org.example.library_db.model.Library;
+import org.example.library_db.model.Member;
+import org.example.library_db.model.ReadableItem;
 import org.example.library_db.repository.LibraryRepository;
+import org.example.library_db.repository.MemberRepository;
+import org.example.library_db.repository.ReadableItemRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -10,9 +14,13 @@ import java.util.List;
 public class LibraryService {
 
     private final LibraryRepository repository;
+    private final MemberRepository memberRepository;
+    private final ReadableItemRepository readableItemRepository;
 
-    public LibraryService(LibraryRepository repository) {
+    public LibraryService(LibraryRepository repository, MemberRepository memberRepository, ReadableItemRepository readableItemRepository) {
         this.repository = repository;
+        this.memberRepository = memberRepository;
+        this.readableItemRepository = readableItemRepository;
     }
 
     public Library addLibrary(Library library) {
@@ -36,6 +44,14 @@ public class LibraryService {
 
     public List<Library> getAllLibraries() {
         return repository.findAll();
+    }
+
+    public List<Member> getMembersByLibraryId(Long id) {
+        return memberRepository.findByLibraryId(id);
+    }
+
+    public List<ReadableItem> getItemsByLibraryId(Long id) {
+        return readableItemRepository.findByLibraryId(id);
     }
 
     private void validateLibrary(Library library, Long currentId) {

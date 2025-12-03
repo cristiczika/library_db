@@ -39,6 +39,9 @@ public class LoanController {
         if (loan == null) return "redirect:/loans";
 
         model.addAttribute("loan", loan);
+        model.addAttribute("member", loan.getMember());
+        model.addAttribute("items", loan.getItems());
+        model.addAttribute("reservations", loan.getReservations());
         return "loans/details";
     }
 

@@ -40,6 +40,9 @@ public class ReservationController {
         if (r == null) return "redirect:/reservations";
 
         model.addAttribute("reservation", r);
+        model.addAttribute("member", r.getMember());
+        model.addAttribute("item", r.getReadableItem());
+        model.addAttribute("loan", r.getLoan());
         return "reservations/details";
     }
 

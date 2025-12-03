@@ -46,6 +46,20 @@ public class BookAuthorService {
         repo.findById(id).ifPresent(repo::delete);
     }
 
+    public List<BookDetails> getBooksByAuthor(Long authorId) {
+        return repo.findByAuthorId(authorId)
+                .stream()
+                .map(BookAuthor::getBook)
+                .toList();
+    }
+
+    public List<Author> getAuthorsByBook(Long bookId) {
+        return repo.findByBookId(bookId)
+                .stream()
+                .map(BookAuthor::getAuthor)
+                .toList();
+    }
+
     private void validateLink(BookDetails book, Author author, Long currentId) {
         if (book == null || book.getId() == null) {
             throw new IllegalArgumentException("Book must be selected.");
