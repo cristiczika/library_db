@@ -142,7 +142,6 @@ public class DataLoader {
                                 (i % 3 == 1) ? ReservationStatus.COMPLETED :
                                         ReservationStatus.CANCELLED;
 
-                // IMPORTANT: reserve a DIFFERENT item, not the one they borrowed
                 ReadableItem reservedItem = items[(i + 2) % 10];
 
                 Reservation r = new Reservation(
@@ -152,7 +151,6 @@ public class DataLoader {
                         status
                 );
 
-                // attach to loan for demonstration, but not same item
                 r.setLoan(loans[i]);
                 loans[i].addReservation(r);
 
