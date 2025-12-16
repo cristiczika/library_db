@@ -2,6 +2,7 @@ package org.example.library_db.repository;
 
 import org.example.library_db.model.ReadableItem;
 import org.example.library_db.model.ReadableItemStatus;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -15,4 +16,8 @@ public interface ReadableItemRepository extends JpaRepository<ReadableItem, Long
     boolean existsByBarcodeAndIdNot(String barcode, Long id);
     Optional<ReadableItem> findById(Long id);
     List<ReadableItem> findByLibraryId(Long libraryId);
+    List<ReadableItem> findByBarcodeContainingIgnoreCase(String barcode, Sort sort);
+    List<ReadableItem> findByPublication_TitleContainingIgnoreCase(String title, Sort sort);
+    List<ReadableItem> findByLibrary_NameContainingIgnoreCase(String name, Sort sort);
 }
+

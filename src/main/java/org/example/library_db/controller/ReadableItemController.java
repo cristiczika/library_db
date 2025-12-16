@@ -30,8 +30,25 @@ public class ReadableItemController {
     }
 
     @GetMapping
-    public String getAll(Model model) {
-        model.addAttribute("items", items.getAllReadableItems());
+    public String index(
+            @RequestParam(required = false) String barcode,
+            @RequestParam(required = false) String publication,
+            @RequestParam(required = false) String library,
+            @RequestParam(defaultValue = "id") String sort,
+            @RequestParam(defaultValue = "asc") String dir,
+            Model model
+    ) {
+        model.addAttribute(
+                "items",
+                items.filter(barcode, publication, library, sort, dir)
+        );
+
+        model.addAttribute("barcode", barcode);
+        model.addAttribute("publication", publication);
+        model.addAttribute("library", library);
+        model.addAttribute("sort", sort);
+        model.addAttribute("dir", dir);
+
         return "items/index";
     }
 

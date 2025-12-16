@@ -6,6 +6,7 @@ import org.example.library_db.model.Reservation;
 import org.example.library_db.repository.LoanRepository;
 import org.example.library_db.repository.ReadableItemRepository;
 import org.example.library_db.repository.ReservationRepository;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -52,6 +53,33 @@ public class ReadableItemService {
 
     public List<Reservation> getReservationsByItemId(Long itemId) {
         return reservations.findByReadableItemId(itemId);
+    }
+
+
+    public List<ReadableItem> filter(
+            String barcode,
+            String publicationTitle,
+            String libraryName,
+            String sort,
+            String dir
+    ) {
+        Sort s = dir.equalsIgnoreCase("desc")
+                ? Sort.by(sort).descending()
+                : Sort.by(sort).ascending();
+
+        if (barcode != null && !barcode.isBlank()) {
+            return repository.findByBarcodeContainingIgnoreCase(barcode, s);
+        }
+
+        if (publicationTitle != null && !publicationTitle.isBlank()) {
+            return repository.findByPublication_TitleContainingIgnoreCase(publicationTitle, s);
+        }
+
+        if (libraryName != null && !libraryName.isBlank()) {
+            return repository.findByLibrary_NameContainingIgnoreCase(libraryName, s);
+        }
+
+        return repository.findAll(s);
     }
 
     private void validateItem(ReadableItem item, Long currentId) {
