@@ -6,6 +6,7 @@ import org.example.library_db.model.ReadableItem;
 import org.example.library_db.repository.LibraryRepository;
 import org.example.library_db.repository.MemberRepository;
 import org.example.library_db.repository.ReadableItemRepository;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -69,5 +70,22 @@ public class LibraryService {
         if (exists) {
             throw new IllegalArgumentException("A library with this name already exists.");
         }
+    }
+
+    public List<Library> filter(String name, String address, String sort, String dir) {
+
+        Sort s = dir.equalsIgnoreCase("desc")
+                ? Sort.by(sort).descending()
+                : Sort.by(sort).ascending();
+
+        if (name != null && !name.isBlank()) {
+            return repository.findByNameContainingIgnoreCase(name, s);
+        }
+
+        if (address != null && !address.isBlank()) {
+            return repository.findByAddressContainingIgnoreCase(address, s);
+        }
+
+        return repository.findAll(s);
     }
 }

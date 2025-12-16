@@ -7,6 +7,7 @@ import org.example.library_db.model.ReadableItemStatus;
 import org.example.library_db.repository.LoanRepository;
 import org.example.library_db.repository.MemberRepository;
 import org.example.library_db.repository.ReadableItemRepository;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -78,6 +79,32 @@ public class LoanService {
 
     public List<Loan> getAllLoans() {
         return loans.findAll();
+    }
+
+    public List<Loan> filter(
+            String member,
+            String barcode,
+            LocalDate date,
+            String sort,
+            String dir
+    ) {
+        Sort s = dir.equalsIgnoreCase("desc")
+                ? Sort.by(sort).descending()
+                : Sort.by(sort).ascending();
+
+        if (member != null && !member.isBlank()) {
+            return loans.findByMemberName(member, s);
+        }
+
+        if (barcode != null && !barcode.isBlank()) {
+            return loans.findByItemBarcode(barcode, s);
+        }
+
+        if (date != null) {
+            return loans.findByDate(date, s);
+        }
+
+        return loans.findAll(s);
     }
 
     private void validateLoanCreation(Loan loan) {

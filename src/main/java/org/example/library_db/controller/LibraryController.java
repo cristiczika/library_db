@@ -19,8 +19,21 @@ public class LibraryController {
     }
 
     @GetMapping
-    public String getAll(Model model) {
-        model.addAttribute("libraries", service.getAllLibraries());
+    public String index(
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) String address,
+            @RequestParam(defaultValue = "id") String sort,
+            @RequestParam(defaultValue = "asc") String dir,
+            Model model
+    ) {
+        model.addAttribute("libraries",
+                service.filter(name, address, sort, dir));
+
+        model.addAttribute("name", name);
+        model.addAttribute("address", address);
+        model.addAttribute("sort", sort);
+        model.addAttribute("dir", dir);
+
         return "libraries/index";
     }
 

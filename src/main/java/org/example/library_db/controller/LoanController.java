@@ -28,8 +28,23 @@ public class LoanController {
     }
 
     @GetMapping
-    public String index(Model model) {
-        model.addAttribute("loans", loans.getAllLoans());
+    public String index(
+            @RequestParam(required = false) String member,
+            @RequestParam(required = false) String barcode,
+            @RequestParam(required = false) LocalDate date,
+            @RequestParam(defaultValue = "id") String sort,
+            @RequestParam(defaultValue = "asc") String dir,
+            Model model
+    ) {
+        model.addAttribute("loans",
+                loans.filter(member, barcode, date, sort, dir));
+
+        model.addAttribute("member", member);
+        model.addAttribute("barcode", barcode);
+        model.addAttribute("date", date);
+        model.addAttribute("sort", sort);
+        model.addAttribute("dir", dir);
+
         return "loans/index";
     }
 

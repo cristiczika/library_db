@@ -6,6 +6,7 @@ import org.example.library_db.model.Reservation;
 import org.example.library_db.repository.LoanRepository;
 import org.example.library_db.repository.MemberRepository;
 import org.example.library_db.repository.ReservationRepository;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -52,6 +53,41 @@ public class MemberService {
 
     public List<Reservation> getReservationsByMemberId(Long id) {
         return reservations.findByMemberId(id);
+    }
+
+    public List<Member> filter(
+            String name,
+            String email,
+            String library,
+            String sort,
+            String dir
+    ) {
+
+        Sort s = dir.equalsIgnoreCase("desc")
+                ? Sort.by(sort).descending()
+                : Sort.by(sort).ascending();
+
+        boolean hasName = name != null && !name.isBlank();
+        boolean hasEmail = email != null && !email.isBlank();
+        boolean hasLibrary = library != null && !library.isBlank();
+
+        if (hasName && hasEmail && hasLibrary) {
+            return repository.filterAll(name, email, library, s);
+        }
+
+        if (hasName) {
+            return repository.findByNameContainingIgnoreCase(name, s);
+        }
+
+        if (hasEmail) {
+            return repository.findByEmailContainingIgnoreCase(email, s);
+        }
+
+        if (hasLibrary) {
+            return repository.findByLibraryName(library, s);
+        }
+
+        return repository.findAll(s);
     }
 
     private void validateMember(Member member, Long currentId) {

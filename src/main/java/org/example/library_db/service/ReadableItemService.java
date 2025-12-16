@@ -58,8 +58,8 @@ public class ReadableItemService {
 
     public List<ReadableItem> filter(
             String barcode,
-            String publicationTitle,
-            String libraryName,
+            String publication,
+            String library,
             String sort,
             String dir
     ) {
@@ -67,19 +67,16 @@ public class ReadableItemService {
                 ? Sort.by(sort).descending()
                 : Sort.by(sort).ascending();
 
-        if (barcode != null && !barcode.isBlank()) {
-            return repository.findByBarcodeContainingIgnoreCase(barcode, s);
-        }
+        return repository.filter(
+                emptyToNull(barcode),
+                emptyToNull(publication),
+                emptyToNull(library),
+                s
+        );
+    }
 
-        if (publicationTitle != null && !publicationTitle.isBlank()) {
-            return repository.findByPublication_TitleContainingIgnoreCase(publicationTitle, s);
-        }
-
-        if (libraryName != null && !libraryName.isBlank()) {
-            return repository.findByLibrary_NameContainingIgnoreCase(libraryName, s);
-        }
-
-        return repository.findAll(s);
+    private String emptyToNull(String v) {
+        return (v == null || v.isBlank()) ? null : v;
     }
 
     private void validateItem(ReadableItem item, Long currentId) {

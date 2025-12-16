@@ -12,6 +12,8 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+
 @Controller
 @RequestMapping("/reservations")
 public class ReservationController {
@@ -29,8 +31,28 @@ public class ReservationController {
     }
 
     @GetMapping
-    public String index(Model model) {
-        model.addAttribute("reservations", reservations.getAllReservations());
+    public String index(
+            @RequestParam(required = false) String member,
+            @RequestParam(required = false) String barcode,
+            @RequestParam(required = false) ReservationStatus status,
+            @RequestParam(required = false) LocalDate date,
+            @RequestParam(defaultValue = "id") String sort,
+            @RequestParam(defaultValue = "asc") String dir,
+            Model model
+    ) {
+
+        model.addAttribute("reservations",
+                reservations.filter(member, barcode, status, date, sort, dir));
+
+        model.addAttribute("member", member);
+        model.addAttribute("barcode", barcode);
+        model.addAttribute("status", status);
+        model.addAttribute("date", date);
+        model.addAttribute("sort", sort);
+        model.addAttribute("dir", dir);
+
+        model.addAttribute("statuses", ReservationStatus.values());
+
         return "reservations/index";
     }
 

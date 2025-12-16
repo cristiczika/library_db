@@ -19,8 +19,21 @@ public class MagazineDetailsController {
     }
 
     @GetMapping
-    public String getAll(Model model) {
-        model.addAttribute("magazines", magazines.getAllMagazineDetails());
+    public String index(
+            @RequestParam(required = false) String title,
+            @RequestParam(required = false) String publisher,
+            @RequestParam(defaultValue = "id") String sort,
+            @RequestParam(defaultValue = "asc") String dir,
+            Model model
+    ) {
+        model.addAttribute("magazines",
+                magazines.filter(title, publisher, sort, dir));
+
+        model.addAttribute("title", title);
+        model.addAttribute("publisher", publisher);
+        model.addAttribute("sort", sort);
+        model.addAttribute("dir", dir);
+
         return "magazines/index";
     }
 

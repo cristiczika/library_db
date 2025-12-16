@@ -4,6 +4,7 @@ import org.example.library_db.model.*;
 import org.example.library_db.repository.LoanRepository;
 import org.example.library_db.repository.ReadableItemRepository;
 import org.example.library_db.repository.ReservationRepository;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -98,6 +99,37 @@ public class ReservationService {
         if (activeReservations >= 5 && (currentId == null)) {
             throw new IllegalArgumentException("You cannot have more than 5 active reservations.");
         }
+    }
+
+    public List<Reservation> filter(
+            String member,
+            String barcode,
+            ReservationStatus status,
+            LocalDate date,
+            String sort,
+            String dir
+    ) {
+        Sort s = dir.equalsIgnoreCase("desc")
+                ? Sort.by(sort).descending()
+                : Sort.by(sort).ascending();
+
+        boolean hasAny =
+                (member != null && !member.isBlank()) ||
+                        (barcode != null && !barcode.isBlank()) ||
+                        status != null ||
+                        date != null;
+
+        if (hasAny) {
+            return repository.filterAll(
+                    member,
+                    barcode,
+                    status,
+                    date,
+                    s
+            );
+        }
+
+        return repository.findAll(s);
     }
 
     private boolean isSameItemForReservation(Long reservationId, Long itemId) {

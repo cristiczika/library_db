@@ -4,35 +4,66 @@
     <title>Loans</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
-
 <body class="container py-4">
+
 <h1 class="mb-4">Loans</h1>
 
-<a href="/loans/new" class="btn btn-primary mb-3">New Loan</a>
+<form method="get" class="row g-2 mb-4 align-items-end">
+    <div class="col-md-3">
+        <input name="member" th:value="${member}" class="form-control" placeholder="Member name">
+    </div>
 
-<table class="table table-striped table-bordered">
+    <div class="col-md-3">
+        <input name="barcode" th:value="${barcode}" class="form-control" placeholder="Item barcode">
+    </div>
+
+    <div class="col-md-2">
+        <input type="date" name="date" th:value="${date}" class="form-control">
+    </div>
+
+    <div class="col-md-2">
+        <select name="sort" class="form-select">
+            <option value="id" th:selected="${sort=='id'}">ID</option>
+            <option value="date" th:selected="${sort=='date'}">Date</option>
+        </select>
+    </div>
+
+    <div class="col-md-2">
+        <select name="dir" class="form-select">
+            <option value="asc" th:selected="${dir=='asc'}">Asc</option>
+            <option value="desc" th:selected="${dir=='desc'}">Desc</option>
+        </select>
+    </div>
+
+    <div class="col-md-2 d-flex gap-2">
+        <button class="btn btn-primary">Filter</button>
+        <a href="/loans" class="btn btn-outline-secondary">Reset</a>
+    </div>
+</form>
+
+<table class="table table-striped table-bordered align-middle">
     <thead class="table-dark">
     <tr>
         <th>ID</th>
         <th>Member</th>
         <th>Date</th>
-        <th>Items Count</th>
-        <th>Actions</th>
+        <th>Items</th>
+        <th style="width:200px">Actions</th>
     </tr>
     </thead>
 
     <tbody>
-    <tr th:each="l : ${loans}">
-        <td th:text="${l.id}"></td>
-        <td th:text="${l.member.name}"></td>
-        <td th:text="${l.date}"></td>
-        <td th:text="${l.items.size()}"></td>
-
+    <tr th:each="loan : ${loans}">
+        <td th:text="${loan.id}"></td>
+        <td th:text="${loan.member.name}"></td>
+        <td th:text="${loan.date}"></td>
         <td>
-            <a th:href="@{|/loans/${l.id}|}" class="btn btn-info btn-sm">Details</a>
-            <a th:href="@{|/loans/${l.id}/edit|}" class="btn btn-warning btn-sm">Edit</a>
-
-            <form th:action="@{|/loans/${l.id}/delete|}" method="post" class="d-inline">
+            <span th:each="i : ${loan.items}"
+                  th:text="${i.barcode} + ' '"></span>
+        </td>
+        <td>
+            <a th:href="@{|/loans/${loan.id}|}" class="btn btn-info btn-sm">Details</a>
+            <form th:action="@{|/loans/${loan.id}/delete|}" method="post" class="d-inline">
                 <button class="btn btn-danger btn-sm"
                         onclick="return confirm('Delete this loan?')">
                     Delete

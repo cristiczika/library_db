@@ -24,8 +24,23 @@ public class MemberController {
     }
 
     @GetMapping
-    public String getAll(Model model) {
-        model.addAttribute("members", members.getAllMembers());
+    public String index(
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) String email,
+            @RequestParam(required = false) String library,
+            @RequestParam(defaultValue = "id") String sort,
+            @RequestParam(defaultValue = "asc") String dir,
+            Model model
+    ) {
+        model.addAttribute("members",
+                members.filter(name, email, library, sort, dir));
+
+        model.addAttribute("name", name);
+        model.addAttribute("email", email);
+        model.addAttribute("library", library);
+        model.addAttribute("sort", sort);
+        model.addAttribute("dir", dir);
+
         return "members/index";
     }
 
