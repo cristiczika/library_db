@@ -25,8 +25,21 @@ public class BookAuthorController {
     }
 
     @GetMapping
-    public String index(Model model) {
-        model.addAttribute("bookauthors", service.getAll());
+    public String index(
+            @RequestParam(required = false) String author,
+            @RequestParam(required = false) String book,
+            @RequestParam(defaultValue = "id") String sort,
+            @RequestParam(defaultValue = "asc") String dir,
+            Model model
+    ) {
+        model.addAttribute("bookauthors",
+                service.filter(author, book, sort, dir));
+
+        model.addAttribute("author", author);
+        model.addAttribute("book", book);
+        model.addAttribute("sort", sort);
+        model.addAttribute("dir", dir);
+
         return "bookauthors/index";
     }
 

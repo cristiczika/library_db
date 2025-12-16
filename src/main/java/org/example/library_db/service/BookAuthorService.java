@@ -4,6 +4,7 @@ import org.example.library_db.model.Author;
 import org.example.library_db.model.BookAuthor;
 import org.example.library_db.model.BookDetails;
 import org.example.library_db.repository.BookAuthorRepository;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -75,5 +76,22 @@ public class BookAuthorService {
         if (exists) {
             throw new IllegalArgumentException("This book is already linked to this author.");
         }
+    }
+
+    public List<BookAuthor> filter(String authorName, String bookTitle, String sort, String dir) {
+
+        Sort s = dir.equalsIgnoreCase("desc")
+                ? Sort.by(sort).descending()
+                : Sort.by(sort).ascending();
+
+        if (authorName != null && !authorName.isBlank()) {
+            return repo.findByAuthorName(authorName, s);
+        }
+
+        if (bookTitle != null && !bookTitle.isBlank()) {
+            return repo.findByBookTitle(bookTitle, s);
+        }
+
+        return repo.findAll(s);
     }
 }

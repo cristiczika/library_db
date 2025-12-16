@@ -3,6 +3,7 @@ package org.example.library_db.service;
 import org.example.library_db.model.BookDetails;
 import org.example.library_db.repository.BookDetailsRepository;
 import org.example.library_db.repository.PublicationRepository;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -39,6 +40,16 @@ public class BookDetailsService {
 
     public List<BookDetails> getAllBookDetails() {
         return repository.findAll();
+    }
+
+    public List<BookDetails> filter(String title, String sort, String dir) {
+        Sort s = dir.equals("desc")
+                ? Sort.by(sort).descending()
+                : Sort.by(sort).ascending();
+
+        return (title == null || title.isBlank())
+                ? repository.findAll(s)
+                : repository.findByTitleContainingIgnoreCase(title, s);
     }
 
     private void validateTitle(String title, Long currentId) {

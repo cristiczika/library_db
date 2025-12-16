@@ -2,6 +2,7 @@ package org.example.library_db.service;
 
 import org.example.library_db.model.Author;
 import org.example.library_db.repository.AuthorRepository;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -56,5 +57,12 @@ public class AuthorService {
         if (exists) {
             throw new IllegalArgumentException("An author with this name already exists.");
         }
+    }
+
+    public List<Author> filter(String name, String sort, String dir) {
+        Sort s = dir.equals("desc") ? Sort.by(sort).descending() : Sort.by(sort).ascending();
+        return (name == null || name.isBlank())
+                ? authorRepository.findAll(s)
+                : authorRepository.findByNameContainingIgnoreCase(name, s);
     }
 }

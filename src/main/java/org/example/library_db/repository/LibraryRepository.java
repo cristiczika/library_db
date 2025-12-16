@@ -8,4 +8,5 @@ import org.springframework.stereotype.Repository;
 public interface LibraryRepository extends JpaRepository<Library, Long> {
     boolean existsByNameIgnoreCase(String name);
     boolean existsByNameIgnoreCaseAndIdNot(String name, Long id);
+    void deleteByName(String name);
 }

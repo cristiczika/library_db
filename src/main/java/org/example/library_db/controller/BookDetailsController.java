@@ -19,8 +19,16 @@ public class BookDetailsController {
     }
 
     @GetMapping
-    public String getAll(Model model) {
-        model.addAttribute("books", books.getAllBookDetails());
+    public String index(
+            @RequestParam(required = false) String title,
+            @RequestParam(defaultValue = "id") String sort,
+            @RequestParam(defaultValue = "asc") String dir,
+            Model model
+    ) {
+        model.addAttribute("books", books.filter(title, sort, dir));
+        model.addAttribute("title", title);
+        model.addAttribute("sort", sort);
+        model.addAttribute("dir", dir);
         return "books/index";
     }
 
